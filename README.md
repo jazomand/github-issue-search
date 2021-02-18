@@ -15,6 +15,7 @@ Typescript React App, using my proposed architecture (based on Uncle Bob's clean
 - Testing using testing-library.
 - Used Material-UI library for material design look & feel.
 - Added custom command for test coverage report: npm run test:coverage.
+- Dependency Injection.
 
 ## Notes:
 The issues search endpoint only matches full words, so autocomplete was not viable with only that data. I opted for the regular issues endpoint instead.
