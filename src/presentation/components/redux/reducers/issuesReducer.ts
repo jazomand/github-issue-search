@@ -1,14 +1,15 @@
 import Issue from "../../../../domain/entities/Issue";
+import { ActionTypes } from "../actions/IssuesActions";
 
 export const StatusFilters = {
-    Started: 'started',
-    Loading: 'loading',
-    Done: 'done',
-    Error: 'error',
+    STARTED: 'started',
+    LOADING: 'loading',
+    DONE: 'done',
+    ERROR: 'error',
 };
   
 const initialState = {
-    status: StatusFilters.Started,
+    status: StatusFilters.STARTED,
     text: '',
     words: [] as string[],
     issues: [] as Issue[],
@@ -18,34 +19,34 @@ const initialState = {
 
 export default function issuesReducer(state = initialState, action: any) {
     switch (action.type) {
-        case 'clean': {
+        case ActionTypes.ISSUES_CLEARED: {
             return {...initialState}
         }
-        case 'loadingIssues': {
+        case ActionTypes.ISSUES_LOAD_PROCESSING: {
             return {
                 ...state,
-                status: StatusFilters.Loading
+                status: StatusFilters.LOADING
             }
         }
-        case 'loadIssuesComplete': {
+        case ActionTypes.ISSUES_LOAD_COMPLETE: {
             return {
                 ...state,
-                status: StatusFilters.Done,
+                status: StatusFilters.DONE,
                 issues: action.payload,
                 filteredIssues: action.payload,
+                error: null,
             }
         }
-        case 'loadIssuesError': {
+        case ActionTypes.ISSUES_LOAD_ERROR: {
             return {
                 ...state,
-                status: StatusFilters.Error,
+                status: StatusFilters.ERROR,
                 error: action.payload,
             }
         }
-        case 'textChanged': {
+        case ActionTypes.ISSUES_FILTERED: {
             return {
                 ...state,
-                text: action.payload.text,
                 filteredIssues: action.payload.filteredIssues,
                 words: action.payload.words
             }

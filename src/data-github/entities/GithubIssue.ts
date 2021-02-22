@@ -4,7 +4,7 @@ export default class GithubIssue{
     constructor (
         public id: number,
         public title: string,
-        public labels: Array<GithubLabel>,
+        public labels: GithubLabel[],
         public url: string,
         public repository_url: string,
         public labels_url: string,

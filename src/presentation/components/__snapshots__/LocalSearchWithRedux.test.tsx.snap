@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchWithRedux renders with data 1`] = `
+exports[`LocalSearchWithRedux renders with data 1`] = `
 <DocumentFragment>
   <div>
     <div
@@ -74,7 +74,7 @@ exports[`SearchWithRedux renders with data 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SearchWithRedux renders without data 1`] = `
+exports[`LocalSearchWithRedux renders without data 1`] = `
 <DocumentFragment>
   <div>
     <div

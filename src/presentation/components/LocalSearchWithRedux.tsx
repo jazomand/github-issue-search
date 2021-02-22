@@ -4,26 +4,34 @@ import { useSelector, useDispatch } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchResults from './SearchResults';
 import Issue from '../../domain/entities/Issue';
+import useDebounce from '../hooks/useDebounce';
 
 import useKeyPress, { keys } from '../hooks/useKeyPress';
 
 import { Alert } from '@material-ui/lab';
 import { CircularProgress, TextField } from '@material-ui/core';
-import { loadIssues, changeText, clean } from './redux/actions/IssuesActions';
+import { loadIssues, filterIssues, clear } from './redux/actions/IssuesActions';
 
-export default function SearchWithRedux() {
-    const { text, issues, filteredIssues, error, words } = useSelector(
+
+export default function LocalSearchWithRedux() {
+    const [text, setText] = useState('');
+    const { issues, filteredIssues, error, words } = useSelector(
         (state: {issues: any}) => state.issues) as 
-        {text: string, issues: Issue[], filteredIssues: Issue[], error: string, words: string[]};
+        {issues: Issue[], filteredIssues: Issue[], error: string, words: string[]};
     const dispatch = useDispatch();
     const [selectResult, setSelectResult] = useState(false);
     const [isAutocompleteOpen, setAutocompleteOpen] = useState(false);
     const downKeyPress = useKeyPress(keys.arrowDown.keyCode);
     let inputRef: any;
+    const debouncedText = useDebounce(text, 500);
 
     const handleTextChange = async (event: any) => {
-        dispatch(changeText(event.target.value));
+        setText(event.target.value);
     };
+
+    useEffect(()=>{
+        dispatch(filterIssues(debouncedText));
+    }, [debouncedText]);
 
     useEffect(()=>{
         if (downKeyPress && (words.length === 0 || !isAutocompleteOpen)){
@@ -43,7 +51,7 @@ export default function SearchWithRedux() {
     useEffect(()=>{
         dispatch(loadIssues());
         return ()=>{
-            dispatch(clean());    
+            dispatch(clear());    
         }
     }, []);
 
@@ -87,7 +95,7 @@ export default function SearchWithRedux() {
                 )}
             />
             {!error && issues.length > 0 && (
-                <SearchResults issues={filteredIssues} selectResult={selectResult} setSelectResult={setSelectResult} />
+                <SearchResults issues={filteredIssues} selectResult={selectResult && !isAutocompleteOpen} setSelectResult={setSelectResult} />
             )}
             {!error && issues.length === 0 && (
                 <CircularProgress />

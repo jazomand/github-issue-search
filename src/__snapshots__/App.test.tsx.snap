@@ -17,19 +17,30 @@ exports[`App renders correctly 1`] = `
           Github facebook/react repository issues
         </h4>
         <h6
-          class="MuiTypography-root MuiTypography-subtitle2"
+          class="MuiTypography-root MuiTypography-subtitle1"
         >
-          Press: "ESC" key to unselect
+          "Local" download all data first and filter when input change on client js. 
+        </h6>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle1"
+          style="margin-bottom: 1vh;"
+        >
+          "Async" search issues when input changes. 
         </h6>
         <h6
           class="MuiTypography-root MuiTypography-subtitle2"
         >
-          Press: "UP & DOWN" keys to select an issue.
+          "ESC" key to unselect
         </h6>
         <h6
           class="MuiTypography-root MuiTypography-subtitle2"
         >
-          Press: "ENTER" key to select a word from autocomplete.
+          "UP & DOWN" keys to select an issue.
+        </h6>
+        <h6
+          class="MuiTypography-root MuiTypography-subtitle2"
+        >
+          "ENTER" key to select a word from autocomplete & to select first result.
         </h6>
         <header
           class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary MuiPaper-elevation4"
@@ -57,7 +68,7 @@ exports[`App renders correctly 1`] = `
                   <span
                     class="MuiTab-wrapper"
                   >
-                    Search without Redux
+                    Local Search without Redux
                   </span>
                   <span
                     class="MuiTouchRipple-root"
@@ -73,7 +84,39 @@ exports[`App renders correctly 1`] = `
                   <span
                     class="MuiTab-wrapper"
                   >
-                    Search with Redux
+                    Local Search with Redux
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </button>
+                <button
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiTab-wrapper"
+                  >
+                    Async Search without Redux
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </button>
+                <button
+                  aria-selected="false"
+                  class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiTab-wrapper"
+                  >
+                    Async Search with Redux
                   </span>
                   <span
                     class="MuiTouchRipple-root"
@@ -170,6 +213,18 @@ exports[`App renders correctly 1`] = `
           aria-labelledby="tab-1"
           hidden=""
           id="tabpanel-1"
+          role="tabpanel"
+        />
+        <div
+          aria-labelledby="tab-2"
+          hidden=""
+          id="tabpanel-2"
+          role="tabpanel"
+        />
+        <div
+          aria-labelledby="tab-3"
+          hidden=""
+          id="tabpanel-3"
           role="tabpanel"
         />
       </div>

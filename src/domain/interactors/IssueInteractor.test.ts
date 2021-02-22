@@ -2,15 +2,15 @@ import Issue from '../../domain/entities/Issue';
 import IssueRepository from '../../domain/data/IssueRepository';
 import IssueInteractor from './IssueInteractor';
 
-const mockIssues : Array<Issue> = [
+const mockIssues : Issue[] = [
     new Issue(
         1, 'ReallyBigIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 
-        'open', new Date(), null, null, 'This is a reallyBigIssue'),
+        'open', new Date(), null, null, 'This is a reallyBigIssue big:'),
     new Issue(
         2, 'ReallySmallIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 
-        'closed', new Date(), null, null, 'This is a reallySmallIssue'),
+        'closed', new Date(), null, null, 'This is a reallySmallIssue small'),
     new Issue(
         3, 'ReallyAnIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 
@@ -18,15 +18,15 @@ const mockIssues : Array<Issue> = [
     new Issue(
         4, 'ReallyYIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 
-        'closed', new Date(), null, null, 'This is a reallyYIssue'),
+        'closed', new Date(), null, null, 'This is a reallyYIssue yyyy'),
     new Issue(
         5, 'ReallyZIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 
-        'closed', new Date(), null, null, 'This is a reallyZIssue'),
+        'closed', new Date(), null, null, 'This is a reallyZIssue zzz'),
     new Issue(
         6, 'ReallyXIssue', [], 
             'https://issueurl.com', 'https://repositoryurl.com', 
-            'closed', new Date(), null, null, 'This is a reallyXIssue'),
+            'closed', new Date(), null, null, 'This is a reallyXIssue xxx'),
 ];
 
 class MockIssueRepository implements IssueRepository {
@@ -46,16 +46,20 @@ test('IssueInteractor getAll', async () => {
 
 test('IssueInteractor search', async () => {
     const issueInteractor = new IssueInteractor(new MockIssueRepository());
-    const search = await issueInteractor.search('dummy');
+    const search = await issueInteractor.search('issue');
     expect(search).toHaveLength(6);
 });
 
-test('IssueInteractor getMatchingWords', () => {
+test('IssueInteractor getSuggestions', () => {
     const issueInteractor = new IssueInteractor(new MockIssueRepository());
-    const words = issueInteractor.getMatchingWords('real', mockIssues);
-    expect(words).toHaveLength(10);
-    ['reallyBigIssue', 'ReallyBigIssue', 'reallySmallIssue', 'ReallySmallIssue', 'reallyAnIssue', 
-     'ReallyAnIssue', 'reallyYIssue', 'ReallyYIssue', 'reallyZIssue', 'ReallyZIssue'].forEach(word=>{
-        expect(words).toContainEqual(word);
+    let words = issueInteractor.getSuggestions('real', mockIssues);
+    expect(words).toHaveLength(6);
+    ['reallybigissue', 'reallysmallissue', 'reallyanissue', 'reallyyIssue', 'reallyzissue', 'reallyxissue'].forEach(word=>{
+        expect(words).toContainEqual(word.toLowerCase());
+    });
+    words = issueInteractor.getSuggestions('reallyZIssue', mockIssues);
+    expect(words).toHaveLength(2);
+    ['reallyzissue', 'reallyzissue zzz'].forEach(word=>{
+        expect(words).toContainEqual(word.toLowerCase());
     });
 });

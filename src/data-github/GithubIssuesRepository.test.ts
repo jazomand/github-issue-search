@@ -1,7 +1,7 @@
 import GithubIssue from './entities/GithubIssue';
 import GithubIssuesRepository from './GithubIssuesRepository';
 
-const mockIssues : Array<GithubIssue> = [
+const mockIssues : GithubIssue[] = [
     new GithubIssue(
         1, 'ReallyBigIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 'https://labelsurl.com', 

@@ -4,7 +4,7 @@ class Issue{
     constructor (
         public id: number,
         public title: string,
-        public labels: Array<Label>,
+        public labels: Label[],
         public url: string,
         public repositoryUrl: string,
         public state: string,

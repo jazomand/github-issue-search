@@ -19,7 +19,7 @@ class MockIssueRepository implements IssueRepository {
   }
 }
 
-const mockIssues : Array<Issue> = [
+const mockIssues : Issue[] = [
   new Issue(
       1, 'ReallyBigIssue', [], 
       'https://issueurl.com', 'https://repositoryurl.com', 

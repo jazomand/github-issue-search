@@ -8,9 +8,11 @@ import {
 import Issue from '../../domain/entities/Issue';
 import IssueInteractor from '../../domain/interactors/IssueInteractor';
 import IssueRepository from '../../domain/data/IssueRepository';
-import SearchWithRedux from './SearchWithRedux';
+import LocalSearchWithRedux from './LocalSearchWithRedux';
 import configureStore from './redux/store';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
+
+const flushPromises = () => new Promise(setImmediate);
 
 class MockIssueRepository implements IssueRepository {
     public getAll = () :Promise<Issue[]> => {
@@ -21,7 +23,7 @@ class MockIssueRepository implements IssueRepository {
     }
 }
 
-const mockIssues : Array<Issue> = [
+const mockIssues : Issue[] = [
     new Issue(
         1, 'ReallyBigIssue', [], 
         'https://issueurl.com', 'https://repositoryurl.com', 
@@ -37,7 +39,7 @@ class MockIssueInteractor extends IssueInteractor {
         super(new MockIssueRepository());
     }
     public getAll = () : Promise<Issue[]> => Promise.resolve(mockIssues);
-    public getMatchingWords = (text: string, issues: Issue[]) : string[] => [text, text];
+    public getSuggestions = (text: string, issues: Issue[]) : string[] => [text, text];
 }
 
 class MockEmptyIssueInteractor extends IssueInteractor {
@@ -45,20 +47,20 @@ class MockEmptyIssueInteractor extends IssueInteractor {
         super(new MockIssueRepository());
     }
     public getAll = () : Promise<Issue[]> => Promise.resolve([]);
-    public getMatchingWords = (text: string, issues: Issue[]) : string[] => [];
+    public getSuggestions = (text: string, issues: Issue[]) : string[] => [];
 }
 
 beforeEach(function(){
     jest.useFakeTimers();
 });
 
-test('SearchWithRedux renders without data', async () => {
+test('LocalSearchWithRedux renders without data', async () => {
     const promise = Promise.resolve();
     const mockIssueInteractor : IssueInteractor = new MockEmptyIssueInteractor();
     const store = configureStore(mockIssueInteractor);
     const {asFragment} = render(
         <Provider store={store}>
-            <SearchWithRedux />
+            <LocalSearchWithRedux />
         </Provider>
     );
     expect(asFragment()).toMatchSnapshot();
@@ -68,13 +70,13 @@ test('SearchWithRedux renders without data', async () => {
     expect(screen.queryByTestId(`card-title-2`)).not.toBeInTheDocument();
 });
 
-test('SearchWithRedux renders with data', async () => {
+test('LocalSearchWithRedux renders with data', async () => {
     const promise = Promise.resolve();
     const mockIssueInteractor : IssueInteractor = new MockIssueInteractor();
     const store = configureStore(mockIssueInteractor);
     const {asFragment} = render(
         <Provider store={store}>
-            <SearchWithRedux />
+            <LocalSearchWithRedux />
         </Provider>
     );
     expect(asFragment()).toMatchSnapshot();
@@ -84,15 +86,16 @@ test('SearchWithRedux renders with data', async () => {
     expect(screen.getByTestId(`card-title-2`)).toHaveTextContent('ReallySmallIssue');
 });
 
-test('SearchWithRedux autocomplete with data', async () => {
+test('LocalSearchWithRedux autocomplete with data', async () => {
     const promise = Promise.resolve();
     const mockIssueInteractor : IssueInteractor = new MockIssueInteractor();
     const store = configureStore(mockIssueInteractor);
     render(
         <Provider store={store}>
-            <SearchWithRedux />
+            <LocalSearchWithRedux />
         </Provider>
     );
+    await flushPromises();
     expect(screen.queryByText(/superText/)).toBeNull();
     fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'superText' },
@@ -104,15 +107,16 @@ test('SearchWithRedux autocomplete with data', async () => {
     await act(() => promise);
 });
 
-test('SearchWithRedux autocomplete with data', async () => {
+test('LocalSearchWithRedux autocomplete without data', async () => {
     const promise = Promise.resolve();
     const mockIssueInteractor : IssueInteractor = new MockEmptyIssueInteractor();
     const store = configureStore(mockIssueInteractor);
     render(
         <Provider store={store}>
-            <SearchWithRedux />
+            <LocalSearchWithRedux />
         </Provider>
     );
+    await flushPromises();
     expect(screen.queryByText(/superText/)).toBeNull();
     fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'superText' },

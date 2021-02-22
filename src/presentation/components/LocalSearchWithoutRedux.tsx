@@ -8,10 +8,11 @@ import useKeyPress, {keys} from '../hooks/useKeyPress';
 
 import { Alert } from '@material-ui/lab';
 import { CircularProgress, TextField } from '@material-ui/core';
+import IssueInteractor from '../../domain/interactors/IssueInteractor';
 
-export default function SearchWithoutRedux(props: any) {
+export default function LocalSearchWithoutRedux(props: {issueInteractor: IssueInteractor}) {
 
-    const [issues, setIssues] = useState([] as Issue[]);            
+    const [issues, setIssues] = useState([] as Issue[]);
     const [text, setText] = useState('');
     const [words, setWords] = useState([] as string[]);
     const [filteredIssues, setFilteredIssues] = useState([] as Issue[]);
@@ -24,10 +25,6 @@ export default function SearchWithoutRedux(props: any) {
 
     const handleTextChange = async (event: any) => {
         setText(event.target.value);
-    };
-    
-    const updateWords = (text: string, issues: Array<Issue>) => {
-        return props.issueInteractor.getMatchingWords(text, issues);
     };
 
     useEffect(()=>{
@@ -47,19 +44,26 @@ export default function SearchWithoutRedux(props: any) {
 
     useEffect(()=>{
         const filteredIssues = props.issueInteractor.filterIssues(debouncedText, issues);
-        setWords(updateWords(debouncedText, filteredIssues));
+        setWords(props.issueInteractor.getSuggestions(debouncedText, filteredIssues));
         setFilteredIssues(filteredIssues);
     }, [debouncedText, issues]);
     
     useEffect(()=>{
+        let active = true;
         (async ()=>{
             try {
-                setIssues(await props.issueInteractor.getAll());
-                setError('');
+                const issues = await props.issueInteractor.getAll();
+                if (active){
+                    setIssues(issues);
+                    setError('');
+                }
             } catch(error){
-                setError(error);
+                setError(error.message);
             }
         })();
+        return ()=>{
+            active = false;
+        }
     }, []);
 
     return (
@@ -101,7 +105,7 @@ export default function SearchWithoutRedux(props: any) {
                 )}
             />
             {!error && issues.length > 0 && (
-                <SearchResults issues={filteredIssues} selectResult={selectResult} setSelectResult={setSelectResult} />
+                <SearchResults issues={filteredIssues} selectResult={selectResult && !isAutocompleteOpen} setSelectResult={setSelectResult} />
             )}
             {!error && issues.length === 0 && (
                 <CircularProgress />

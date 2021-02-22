@@ -7,7 +7,7 @@ import SearchResults from './SearchResults';
 import Issue from '../../domain/entities/Issue';
 
 test('SearchResults renders correctly', () => {
-    const mockIssues : Array<Issue> = [
+    const mockIssues : Issue[] = [
         new Issue(
             1, 'ReallyBigIssue', [], 
             'https://issueurl.com', 'https://repositoryurl.com', 
