@@ -21,8 +21,8 @@ Typescript React App, using my proposed architecture (based on Uncle Bob's clean
 Autocompletion works on the premise of suggesting the rest of the word you are typing and the following words. 
 This behavior has been mimicked by suggesting how to complete current word and most used next words using the issues data.
 This strategy works better on "Local" search, because github's search API limited capabilities with incomplete words:
-- [https://api.github.com/search/issues?q=repo:facebook/react%20is:issue%20chro]("chro" API search): "chro" (0 results)
-- [https://api.github.com/search/issues?q=repo:facebook/react%20is:issue%20chrome]("chrome" API search): "chrome" (1741 results)
+- https://api.github.com/search/issues?q=repo:facebook/react%20is:issue%20chro : "chro" (0 results)
+- https://api.github.com/search/issues?q=repo:facebook/react%20is:issue%20chrome : "chrome" (1741 results)
 
 ## Available Scripts
 
